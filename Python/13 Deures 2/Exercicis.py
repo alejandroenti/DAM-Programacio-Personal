@@ -3,7 +3,7 @@ import os           # Per netejar la consola
 import re           # Per fer expresions regulars
 import json         # Per dibuixar diccionaris en múltiples linies
 import random       # Per generar números aleatoris
-import readline     # Per guardar activar les tecles up/down
+#import readline     # Per guardar activar les tecles up/down
 
 def diccionariBonic(dic, spaces):
     return json.dumps(dic, indent = spaces, ensure_ascii=False)
@@ -81,7 +81,14 @@ def infoJoc(nomJoc):
         infoJoc("abc")
           ["Error infoJoc: "abc" desconegut."]
     """
-    pass
+    joc_llista = []
+
+    for joc_dict in llistaJocs:
+        if joc_dict["nom"] == nomJoc:
+            joc_llista = [f"  {joc_dict["nom"]}: {joc_dict["any"]}, {joc_dict["tipus"]} ({joc_dict["preu"]})"]
+            return joc_llista
+        
+    return [f"  Error infoJoc: \"{nomJoc}\" desconegut."]
 
 def comptarPerClau(clau):
     """
@@ -110,7 +117,13 @@ def comptarPerClau(clau):
             "1981": 1
         }
     """
-    pass
+    clau_dict = {}
+
+    for joc_dict in llistaJocs:
+        valor_clau = joc_dict[clau_dict]
+        clau_dict[valor_clau] = clau_dict.get(valor_clau, 0) + 1
+    
+    return diccionariBonic(clau_dict, 4)
 
 def llistarPerClau(clau, condicio):
     """
@@ -129,8 +142,13 @@ def llistarPerClau(clau, condicio):
         llistarPerClau("any", "1990")
           Mario Kart 64: 1996, Carreres (10000 pessetes)
     """
-    pass
+    jocs_llista = []
 
+    for joc_dict in llistaJocs:
+        if joc_dict[clau] == condicio:
+            jocs_llista.extend(infoJoc(joc_dict["nom"]))
+    
+    return jocs_llista
 
 def llistarPerInterval(clau, inici, fi):
     """
@@ -149,7 +167,13 @@ def llistarPerInterval(clau, inici, fi):
           Metroid: 1986, Acció-Aventura (6000 pessetes)
           Donkey Kong: 1981, Plataformes (1000 pessetes)
     """
-    pass
+    jocs_llista = []
+
+    for joc_dict in llistaJocs:
+        if inici <= joc_dict[clau] <= fi:
+            jocs_llista.extend(infoJoc(joc_dict["nom"]))
+    
+    return jocs_llista
 
 def modificarJoc(nomJoc, clau, nouValor):
     global llistaJocs
@@ -168,9 +192,17 @@ def modificarJoc(nomJoc, clau, nouValor):
         modificarJoc("Super Mario Bros", "preu", 2)
           Super Mario Bros: 1985, Plataformes (2 pessetes)
     """
-    pass
+    joc_llista = []
 
-def ajudaAmpliada(nomFuncio):    
+    for joc_dict in llistaJocs:
+        if joc_dict["name"] == nomJoc:
+            joc_dict[clau] = nouValor
+            joc_llista = [f"  {joc_dict["nom"]}: {joc_dict["any"]}, {joc_dict["tipus"]} ({joc_dict["preu"]})"]
+            return joc_llista
+        
+    return [f"  Error modificarJoc: \"{nomJoc}\" desconegut."]
+
+def ajudaAmpliada(nomFuncio):
     """
     Proporciona informació detallada sobre una funció específica del programa.
     Paràmetres:
@@ -192,7 +224,21 @@ def ajudaAmpliada(nomFuncio):
         ajudaAmpliada("abc")
           Error ajudaAmpliada: funció "abc" desconeguda.
     """
-    pass
+    funcio_llista = []
+
+    if nomFuncio not in diccionariFuncions.keys():
+        return [f"  Error ajudaAmpliada: funció \"{nomFuncio}\" desconeguda."]
+    
+    funcio_llista.append(f"  Ajuda: {diccionariFuncions[nomFuncio]["ajuda"]}")
+    if "clau" in diccionariFuncions[nomFuncio]["ajuda"]:
+        claus = llistaJocs[0].keys()
+        if nomFuncio == 'llistarPerInterval':
+            funcio_llista.append("  Claus:   any, preu")
+        else:
+            funcio_llista.append(f"  Claus:   {', '.join(claus)}")
+    funcio_llista.append(f"  Exemple: {diccionariFuncions[nomFuncio]["exemple"]}")
+
+    return funcio_llista
 
 def divideixFrase(frase):
     """
@@ -256,7 +302,63 @@ def cridaFuncio(frase):
         cridaFuncio("funcio llistarPerInterval any 1985 1990")
         ? Executa llistarPerInterval amb els paràmetres donats
     """
-    pass
+    frase_divida = divideixFrase(frase)
+
+    if len(frase_divida) == 0:
+        return ["  Error cridaFuncio: no hi ha paràmetres"]
+
+    tipus_peticio = frase_divida[0]
+
+    if tipus_peticio == "ajuda":
+        if len(frase_divida) == 1:
+            return llistaAjuda
+        else:
+            nom_funcio = frase_divida[1]
+            return ajudaAmpliada(nom_funcio)
+    elif tipus_peticio == "funcio":
+        if len(frase_divida) == 1:
+            return ["  Error cridaFuncio: falta el nom de la funció i els paràmetres si en té"]
+        else:
+            nom_funcio = frase_divida[1]
+            if frase_divida[1] not in diccionariFuncions.keys():
+                return [f"  Error cridaFuncio: funció \"{nom_funcio}\" desconeguda"]
+            else:
+                num_parametres = diccionariFuncions[nom_funcio]["parametres"]
+                if len(frase_divida) != (num_parametres + 2):
+                    return [f"  Error cridaFuncio: la funció \"{frase_divida[1]}\" necessita {diccionariFuncions[frase_divida[1]]["parametres"]} paràmetre(s)"]
+                elif frase_divida[1] == "llistarPerInterval" and frase_divida[2] not in ["any", "preu"]:
+                    return [f"  Error cridaFuncio: la clau \"{frase_divida[2]}\" no és vàlida, la \"llistarPerInterval\" necessita \"any\" o \"preu\""]
+                else:
+                    parametres = frase_divida[2:]
+                    if nom_funcio == "infoJoc":
+                        return infoJoc(parametres[0])
+                    if nom_funcio == "comptarPerClau":
+                        resultat = comptarPerClau(parametres[0])
+                        return diccionariBonic(resultat, 4).split('\n')
+                    if nom_funcio == "llistarPerClau":
+                        clau = parametres[0]
+                        condicio = parametres[1]
+                        if (clau == 'any' or clau == 'preu') and not(condicio.isnumeric()):
+                            return [f"  Error cridaFuncio: la clau \"{clau}\" ha de tenir un valor numèric"]
+                        else:
+                            return llistarPerClau(clau, condicio)
+                    if nom_funcio == "llistarPerInterval":
+                        clau = parametres[0]
+                        inici = parametres[1]
+                        fi = parametres[2]
+                        if not(inici.isnumeric() and fi.isnumeric()):
+                            return ["  Error cridaFuncio: inici i final han de ser números"]
+                        return llistarPerInterval(clau, int(inici), int(fi))
+                    if nom_funcio == "modificarJoc":
+                        nom_joc = parametres[0]
+                        clau = parametres[1]
+                        nou_valor = parametres[2]
+                        modificats = modificarJoc(nom_joc, clau, nou_valor)
+                        return modificats
+                    else:
+                        return []
+    else:
+        return [f"  Error cridaFuncio: tipus de petició \"{tipus_peticio}\" desconeguda"]
 
 def limitaFrases(llista):
     """
@@ -276,7 +378,13 @@ def limitaFrases(llista):
         limitaFrases(['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l'])
         ['c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l']
     """
-    pass
+    longitud_llista = len(llista)
+
+    if longitud_llista <= 10:
+         return llista
+    
+    nova_llista = llista[longitud_llista - 10:]
+    return nova_llista
 
 def mostraFrases(llista):
     """
@@ -319,7 +427,11 @@ def mostraFrases(llista):
         - S'utilitza típicament per mostrar un historial o una llista de resultats
         de manera consistent en una interfície de consola.
     """
-    pass
+    for i in range(10):
+        if i >= len(llista):
+            print(f" ")
+        else:
+            print(llista[i])
 
 def mainRun():
     """
@@ -361,6 +473,20 @@ def mainRun():
         - L'historial es manté entre iteracions, permetent a l'usuari veure les comandes i resultats anteriors.
         - La funció clearScreen s'espera que netegi la pantalla de la consola per a una millor presentació.
     """
-    pass
+    historial = []
+    exit = False
+
+    while not exit:
+        historial = limitaFrases(historial)
+        clearScreen()
+        mostraFrases(historial)
+        comanda = input("Introdueix una comanda ('ajuda' o 'sortir'): ")
+
+        if comanda.lower() == "sortir":
+            exit = True
+            continue
+
+        historial.extend(["", f"> Comanda: {comanda}"])
+        historial.extend(cridaFuncio(comanda))
 
 mainRun()
