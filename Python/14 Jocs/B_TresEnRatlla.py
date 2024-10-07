@@ -37,7 +37,12 @@ def genera_tauler():
            ['·', '·', '·'], 
            ['·', '·', '·']]
     """
-    pass
+    tauler = []
+    for i in range(3):
+        fila = ["·", "·", "·"]
+        tauler.append(fila)
+
+    return tauler
 
 # Exercici 1
 def dibuixa_tauler(tauler):
@@ -67,7 +72,20 @@ def dibuixa_tauler(tauler):
           # B O X ·
           # C · · O
     """
-    pass
+    clearScreen()
+    files = ["0", "1", "2"]
+    columnes = ["A", "B", "C"]
+
+    print("", end="   ")
+    for element in files:
+        print(f"{element}", end=" ")
+    print()
+
+    for fila in range(len(tauler)):
+        print(f" {columnes[fila]}", end=" ")
+        for columna in range(len(tauler[fila])):
+            print(f"{tauler[fila][columna]}", end=" ")
+        print()
 
 # Exercici 2
 def fila_columna(posicio):
@@ -91,7 +109,21 @@ def fila_columna(posicio):
         fila_columna("D2")
         -1, -1
     """
-    pass
+    char_a = 65
+    fila = ord(posicio[0].upper()) - char_a
+    columna = int(posicio[1])
+
+    if fila < 0 or fila > 2:
+        fila = -1
+        columna = -1
+        return (fila, columna)
+    
+    if columna < 0 or columna > 2:
+        fila = -1
+        columna = -1
+        return (fila, columna)
+
+    return (fila, columna)
 
 # Exercici 3
 def posicio_valida(tauler, posicio):
@@ -118,7 +150,8 @@ def posicio_valida(tauler, posicio):
         posicio_valida(tauler, "B1")
         False
     """
-    pass
+    fila, columna = fila_columna(posicio)
+    return tauler[fila][columna] == "·"
 
 
 # Exercici 4
@@ -150,8 +183,20 @@ def jugada_usuari(tauler):
           # L'usuari introdueix una posició vàlida com "A1" i la funció marca aquesta casella amb una "X".
           # O l'usuari escriu "SORTIR", i el joc s'atura.
     """
-    pass
+    dibuixa_tauler(tauler)
 
+    posicio_valida = False
+
+    while not posicio_valida:
+        jugada = input("Introdueix una posició en format (ex: \"A0\") o \"SORTIR\": ")
+
+        if jugada.upper() == "SORTIR":
+            return "sortir"
+
+        if posicio_valida(jugada):
+            fila, columna = fila_columna(jugada)
+            tauler[fila][columna] = "X"
+            posicio_valida = True
   
 # Exercici 5
 def cerca_posicio_guanyadora(tauler, jugador):
@@ -185,7 +230,23 @@ def cerca_posicio_guanyadora(tauler, jugador):
         cerca_posicio_guanyadora(tauler, "O")
           None    # El jugador "O" no té cap posició guanyadora immediata
     """
-    pass
+    for i in range(3):
+        if tauler[i].count(jugador) == 2 and tauler[i].count('·') == 1:
+            return i, tauler[i].index('·')
+        # Comprovar columnes
+        columna = [tauler[0][i], tauler[1][i], tauler[2][i]]
+        if columna.count(jugador) == 2 and columna.count('·') == 1:
+            return columna.index('·'), i
+        
+    diagonal1 = [tauler[0][0], tauler[1][1], tauler[2][2]]
+    if diagonal1.count(jugador) == 2 and diagonal1.count('·') == 1:
+        idx = diagonal1.index('·')
+        return idx, idx
+    diagonal2 = [tauler[0][2], tauler[1][1], tauler[2][0]]
+    if diagonal2.count(jugador) == 2 and diagonal2.count('·') == 1:
+        idx = diagonal2.index('·')
+        return idx, 2 - idx
+    return None
 
 def jugada_ordinador(tauler):
     """
@@ -215,8 +276,12 @@ def jugada_ordinador(tauler):
         jugada_ordinador(tauler)
           # L'ordinador realitza una jugada seguint la seva estratègia i el tauler es modifica en conseqüència.
     """
-    pass
+    fila, columna = cerca_posicio_guanyadora(tauler, "O")
 
+    if fila is None:
+        fila_usuari, columna_usuari = cerca_posicio_guanyadora(tauler, "X")
+        if fila_usuari is None:
+            pass
 # Exercici 6
 def busca_guanyador(tauler):
     """
