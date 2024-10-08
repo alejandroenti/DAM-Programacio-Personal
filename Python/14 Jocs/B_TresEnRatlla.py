@@ -37,12 +37,7 @@ def genera_tauler():
            ['·', '·', '·'], 
            ['·', '·', '·']]
     """
-    tauler = []
-    for i in range(3):
-        fila = ["·", "·", "·"]
-        tauler.append(fila)
-
-    return tauler
+    return [['·' for _ in range(3)] for _ in range(3)]
 
 # Exercici 1
 def dibuixa_tauler(tauler):
@@ -73,19 +68,10 @@ def dibuixa_tauler(tauler):
           # C · · O
     """
     clearScreen()
-    files = ["0", "1", "2"]
-    columnes = ["A", "B", "C"]
-
-    print("", end="   ")
-    for element in files:
-        print(f"{element}", end=" ")
-    print()
-
-    for fila in range(len(tauler)):
-        print(f" {columnes[fila]}", end=" ")
-        for columna in range(len(tauler[fila])):
-            print(f"{tauler[fila][columna]}", end=" ")
-        print()
+    print("  0 1 2")
+    files = ['A', 'B', 'C']
+    for i in range(3):
+        print(files[i], ' '.join(tauler[i]))
 
 # Exercici 2
 def fila_columna(posicio):
@@ -109,21 +95,10 @@ def fila_columna(posicio):
         fila_columna("D2")
         -1, -1
     """
-    char_a = 65
-    fila = ord(posicio[0].upper()) - char_a
-    columna = int(posicio[1])
-
-    if fila < 0 or fila > 2:
-        fila = -1
-        columna = -1
-        return (fila, columna)
-    
-    if columna < 0 or columna > 2:
-        fila = -1
-        columna = -1
-        return (fila, columna)
-
-    return (fila, columna)
+    files = {'A': 0, 'B': 1, 'C': 2}
+    if len(posicio) == 2 and posicio[0] in files and posicio[1].isdigit() and 0 <= int(posicio[1]) < 3:
+        return files[posicio[0]], int(posicio[1])
+    return -1, -1
 
 # Exercici 3
 def posicio_valida(tauler, posicio):
@@ -151,7 +126,9 @@ def posicio_valida(tauler, posicio):
         False
     """
     fila, columna = fila_columna(posicio)
-    return tauler[fila][columna] == "·"
+    if fila == -1 or columna == -1:
+        return False
+    return tauler[fila][columna] == '·'
 
 
 # Exercici 4
@@ -183,20 +160,17 @@ def jugada_usuari(tauler):
           # L'usuari introdueix una posició vàlida com "A1" i la funció marca aquesta casella amb una "X".
           # O l'usuari escriu "SORTIR", i el joc s'atura.
     """
-    dibuixa_tauler(tauler)
-
-    posicio_valida = False
-
-    while not posicio_valida:
-        jugada = input("Introdueix una posició en format (ex: \"A0\") o \"SORTIR\": ")
-
-        if jugada.upper() == "SORTIR":
+    while True:
+        dibuixa_tauler(tauler)
+        posicio = input("Escriu la posició a descobrir o 'sortir' (per exemple A0): ").upper()
+        if posicio == "SORTIR":
             return "sortir"
+        if posicio_valida(tauler, posicio):
+            fila, columna = fila_columna(posicio)
+            tauler[fila][columna] = 'X'
+            break
+    return None
 
-        if posicio_valida(jugada):
-            fila, columna = fila_columna(jugada)
-            tauler[fila][columna] = "X"
-            posicio_valida = True
   
 # Exercici 5
 def cerca_posicio_guanyadora(tauler, jugador):
@@ -231,13 +205,14 @@ def cerca_posicio_guanyadora(tauler, jugador):
           None    # El jugador "O" no té cap posició guanyadora immediata
     """
     for i in range(3):
+        # Comprovar files
         if tauler[i].count(jugador) == 2 and tauler[i].count('·') == 1:
             return i, tauler[i].index('·')
         # Comprovar columnes
         columna = [tauler[0][i], tauler[1][i], tauler[2][i]]
         if columna.count(jugador) == 2 and columna.count('·') == 1:
             return columna.index('·'), i
-        
+    # Comprovar diagonals
     diagonal1 = [tauler[0][0], tauler[1][1], tauler[2][2]]
     if diagonal1.count(jugador) == 2 and diagonal1.count('·') == 1:
         idx = diagonal1.index('·')
@@ -276,12 +251,47 @@ def jugada_ordinador(tauler):
         jugada_ordinador(tauler)
           # L'ordinador realitza una jugada seguint la seva estratègia i el tauler es modifica en conseqüència.
     """
-    fila, columna = cerca_posicio_guanyadora(tauler, "O")
+    # 1. Comprovar si l'ordinador pot guanyar
+    posicio = cerca_posicio_guanyadora(tauler, 'O')
+    if posicio:
+        fila, columna = posicio
+        tauler[fila][columna] = 'O'
+        dibuixa_tauler(tauler)
+        return
 
-    if fila is None:
-        fila_usuari, columna_usuari = cerca_posicio_guanyadora(tauler, "X")
-        if fila_usuari is None:
-            pass
+    # 2. Comprovar si l'usuari pot guanyar i bloquejar-lo
+    posicio = cerca_posicio_guanyadora(tauler, 'X')
+    if posicio:
+        fila, columna = posicio
+        tauler[fila][columna] = 'O'
+        dibuixa_tauler(tauler)
+        return
+
+    # 3. Si no hi ha cap jugada imminent, triar el centre, cantonades o qualsevol posició lliure
+    if tauler[1][1] == '·':
+        tauler[1][1] = 'O'
+        dibuixa_tauler(tauler)
+        return
+
+    # Tria una de les cantonades si està lliure
+    cantonades = [(0, 0), (0, 2), (2, 0), (2, 2)]
+    random.shuffle(cantonades)  # Barregem per triar una de forma aleatòria
+    for fila, columna in cantonades:
+        if tauler[fila][columna] == '·':
+            tauler[fila][columna] = 'O'
+            dibuixa_tauler(tauler)
+            return
+
+    # Si no hi ha cap cantonada lliure, triar qualsevol altra posició lliure
+    while True:
+        fila = random.randint(0, 2)
+        columna = random.randint(0, 2)
+        if tauler[fila][columna] == '·':
+            tauler[fila][columna] = 'O'
+            break
+
+    dibuixa_tauler(tauler)
+
 # Exercici 6
 def busca_guanyador(tauler):
     """
@@ -315,7 +325,16 @@ def busca_guanyador(tauler):
         busca_guanyador(tauler)
           "·"  # No hi ha cap guanyador, és un empat
     """
-    pass
+    for i in range(3):
+        if tauler[i][0] == tauler[i][1] == tauler[i][2] != '·':
+            return tauler[i][0]
+        if tauler[0][i] == tauler[1][i] == tauler[2][i] != '·':
+            return tauler[0][i]
+    if tauler[0][0] == tauler[1][1] == tauler[2][2] != '·':
+        return tauler[0][0]
+    if tauler[0][2] == tauler[1][1] == tauler[2][0] != '·':
+        return tauler[0][2]
+    return '·'
 
 # Exercici 7
 def mainRun():
@@ -342,7 +361,26 @@ def mainRun():
         # Si l'ordinador guanya, mostrarà "El guanyador és: O".
         # Si cap guanya després de 9 torns, mostrarà "Empat!".
     """
-    pass
+    tauler = genera_tauler()
+    guanyador = '·'
+    for torn in range(9):
+        if torn % 2 == 0:
+            accio = jugada_usuari(tauler)
+            if accio == "sortir":
+                print("Has sortit del joc.")
+                return  # Sortim del joc
+        else:
+            jugada_ordinador(tauler)
+        
+        guanyador = busca_guanyador(tauler)
+        if guanyador != '·':
+            break
+
+    dibuixa_tauler(tauler)
+    if guanyador == '·':
+        print("Empat!")
+    else:
+        print(f"El guanyador és: {guanyador}")
 
 # No canvieu això o no passarà el test
 if __name__ == "__main__":

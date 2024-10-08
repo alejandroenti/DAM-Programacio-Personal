@@ -43,7 +43,9 @@ def genera_noms():
           # ['Tom', 'Maria', 'Anita', 'Phillip', ...]  (la llista ordenada aleatòriament)
 
     """
-    pass
+    noms = ['Phillip', 'Susan', 'Herman', 'Anne', 'Claire', 'Richard', 'Tom', 'Max', 'Sam', 'Anita', 'Joe', 'Maria']
+    random.shuffle(noms)
+    return noms
 
 def escull_carta():
     """
@@ -60,7 +62,8 @@ def escull_carta():
         escull_carta()
           # 'Maria'  (últim nom en la baralla generada)
     """
-    pass
+    noms = genera_noms()
+    return noms[-1]
 
 def genera_tauler():
     """
@@ -80,7 +83,17 @@ def genera_tauler():
              ['Claire', 'Richard', 'Tom', 'Max'],
              ['Sam', 'Anita', 'Joe', 'Maria']]  (noms aleatoris)
     """
-    pass
+    noms = genera_noms()
+    tauler = []
+    for i in range(3):
+        columna = []
+        for j in range(4):
+            nom = random.choice(noms)
+            columna.append(nom)
+            noms.remove(nom)
+        tauler.append(columna)
+    
+    return tauler
 
 def genera_partida():
     """
@@ -104,7 +117,13 @@ def genera_partida():
         genera_partida()
           # ['Maria', 'Tom', [['Phillip', 'Susan', 'Herman', 'Anne'], ...], [['Claire', 'Richard', 'Tom', 'Max'], ...]]
     """
-    pass
+    usuari = escull_carta()
+    ordinador = escull_carta()
+    tauler_usuari = genera_tauler()
+    tauler_ordinador = genera_tauler()
+    
+    resultat = [usuari, ordinador, tauler_usuari, tauler_ordinador]
+    return resultat
 
 def escriu_nom():
     """
@@ -126,7 +145,13 @@ def escriu_nom():
             escriu_nom()
               # 'Albert' (si l'usuari introdueix un nom vàlid)
     """
-    pass
+    while True:
+        nom_introudit = input("Escriu el teu nom: ")
+        if nom_introudit.isalpha():
+            return nom_introudit
+        else:
+            print("Error: El nom no pot contenir números. Torna a provar.")
+
 
 def selecciona_oponent():
     """
@@ -146,7 +171,22 @@ def selecciona_oponent():
         selecciona_oponent()
           # 'Brutus' (si l'usuari selecciona un nom vàlid de la llista)
     """
-    pass
+    oponents = ['Romulus', 'Tarpeia', 'Horatius', 'Cloelia', 'Brutus', 'Lucretia']
+
+    while True:
+        for i in range(len(oponents)):
+            if i == len(oponents) - 1:
+                print(oponents[i])
+            else:
+                print(oponents[i], end=", ")
+        oponent = input("Selecciona un nom de la llista: ")
+
+        if oponent not in oponents:
+            clearScreen()
+            print("Error! Selecciona un oponent vàlid.")
+        else:
+            clearScreen()
+            return oponent
 
 def dibuixa_tauler_secret(tauler, descoberts):
     """
@@ -175,7 +215,22 @@ def dibuixa_tauler_secret(tauler, descoberts):
           # B ? X ? ?
           # C ? ? ? ?
     """
-    pass
+    nums = ["0", "1", "2", "3"]
+    lletres = ["A", "B", "C"]
+    print(" ", end="")
+    for num in range(len(nums)):
+        print(f" {num}", end="")
+    print()
+
+    for fila in range(3):
+        print(f" {lletres[fila]}", end="")
+        for columna in range(4):
+            simbol = "?"
+            if (fila, columna) in descoberts:
+                simbol = "X"
+            print(f" {simbol}", end="")
+        print()
+
 
 def fila_columna(posicio):
     """
@@ -203,7 +258,20 @@ def fila_columna(posicio):
         fila_columna("AA") -> -1 (columna no numèrica)
         fila_columna("") -> -1 (entrada buida)
     """
-    pass
+    files = {'A': 0, 'B': 1, 'C': 2}
+    pos = (-1, -1)
+
+    if len(posicio) != 2:
+        return pos
+    
+    fila = files[posicio[0]]
+    columna = posicio[1]
+
+    if columna < 0 or columna > 3:
+        return pos
+    
+    pos = (fila, columna)
+    return pos
 
 def posicio_valida(posicio, descoberts):
     """
@@ -225,7 +293,12 @@ def posicio_valida(posicio, descoberts):
         posicio_valida("A0", descoberts)
           # False (la posició ja ha estat descoberta)
     """
-    pass
+    pos = fila_columna(posicio)
+
+    if pos in descoberts or pos == (-1, -1):
+        return False
+    
+    return True
 
 def jugada_usuari(tauler_oponent, descoberts):
     """
@@ -253,7 +326,17 @@ def jugada_usuari(tauler_oponent, descoberts):
         jugada_usuari(tauler_oponent, descoberts)
           # Demana la posició a descobrir
     """
-    pass
+    dibuixa_tauler_secret(tauler_oponent, descoberts)
+
+    while True:
+        posicio = input("Introdueix una posicio: ")
+
+        if not posicio_valida(posicio):
+            print("Posició no vàlida. Torna a provar.")
+        else:
+            fila, columna = fila_columna(posicio)
+            descoberts.append((fila, columna))
+            return tauler_oponent[fila][columna] 
 
 def jugada_oponent(tauler_usuari, descoberts):
     """
@@ -279,7 +362,13 @@ def jugada_oponent(tauler_usuari, descoberts):
         jugada_oponent(tauler_usuari, descoberts)
           # Retorna el personatge seleccionat per l'ordinador.
     """
-    pass
+    while True:
+        fila = random.randint(0, 3)
+        columna = random.randint(0, 4)
+
+        if (fila, columna) not in descoberts:
+            descoberts.append((fila, columna))
+            return tauler_usuari[fila][columna]
 
 def esborra_del_tauler(tauler, nom):
     """
@@ -301,7 +390,11 @@ def esborra_del_tauler(tauler, nom):
         esborra_del_tauler(tauler, 'Phillip')
           # El tauler tindrà la posició de 'Phillip' buida.
     """
-    pass
+    for fila in range(3):
+        for columna in range(4):
+            if tauler[fila][columna] == nom:
+                tauler[fila][columna] == ""
+                return None
 
 def joc_del_qui_es_qui():
     """
@@ -321,7 +414,37 @@ def joc_del_qui_es_qui():
         joc_del_qui_es_qui()
             # Comença el joc i alterna els torns fins que hi ha un guanyador.
     """
-    pass
+    al_menu = False
+
+    while not al_menu:
+        usuari, ordinador, tauler_usuari, tauler_ordinador = genera_partida()
+        usuari_descobert = []
+        ordinador_descobert = []
+
+        while True:
+            nom = jugada_usuari(tauler_ordinador, usuari_descobert)
+            if nom == ordinador:
+                print("Has guanyat!")
+                break
+            else:
+                esborra_del_tauler(tauler_ordinador, nom)
+
+            nom = jugada_oponent(tauler_usuari, ordinador_descobert)
+            if nom == usuari:
+                print("L'ordinador ha guanyat!")
+                break
+            else:
+                esborra_del_tauler(tauler_usuari, nom)
+        
+        while True:
+            opcio = input("Vols tornar a jugar (j) o tornar al menú (m)? ").lower()
+            if opcio == "j":
+                break
+            elif opcio == "m":
+                al_menu = True
+                break
+            else:
+                print("Opció no vàlida. Si us plau, escriu 'j' per jugar de nou o 'm' per tornar al menú.")
     
 def mainRun():
     """
@@ -341,7 +464,29 @@ def mainRun():
             0) Sortir
             Escull una opció:
     """
-    pass
+    while True:
+        print("""
+Qui és qui?
+1) Escull el teu nom
+2) Escull el nom de l'oponent
+3) Juga
+0) Sortir
+        """)
+        opcio = int(input("Escull una opció: "))
+
+        nom = ""
+        oponent = ""
+
+        if opcio == 1:
+            nom = escriu_nom()
+        elif opcio == 2:
+            oponent = selecciona_oponent()
+        elif opcio == 3:
+            joc_del_qui_es_qui()
+        elif opcio == 0:
+            break
+        else:
+            print("Opció incorrecta")
 
 # No canvieu això o no passarà el test
 if __name__ == "__main__":
