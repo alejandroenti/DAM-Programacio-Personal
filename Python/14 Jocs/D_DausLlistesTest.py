@@ -150,7 +150,5 @@ class TestJugar(unittest.TestCase):
         self.assertIn('Ha guanyat l\'ordinador', output)
         self.assertEqual(punts_jugador, -1)  # Retorna -1 quan guanya l'ordinador
 
-
-
 if __name__ == '__main__':
     unittest.main()

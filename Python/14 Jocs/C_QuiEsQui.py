@@ -147,7 +147,7 @@ def escriu_nom():
     """
     while True:
         nom_introudit = input("Escriu el teu nom: ")
-        if nom_introudit.isalpha():
+        if nom_introudit.isalpha() or nom_introudit == "" or " " in nom_introudit:
             return nom_introudit
         else:
             print("Error: El nom no pot contenir números. Torna a provar.")
@@ -223,7 +223,7 @@ def dibuixa_tauler_secret(tauler, descoberts):
     print()
 
     for fila in range(3):
-        print(f" {lletres[fila]}", end="")
+        print(f"{lletres[fila]}", end="")
         for columna in range(4):
             simbol = "?"
             if (fila, columna) in descoberts:
@@ -262,13 +262,20 @@ def fila_columna(posicio):
     pos = (-1, -1)
 
     if len(posicio) != 2:
-        return pos
+        return -1
     
-    fila = files[posicio[0]]
-    columna = posicio[1]
+
+    if posicio[0].isnumeric() or not posicio[1].isnumeric():
+        return -1
+    
+    if posicio[0].upper() not in files.keys():
+        return -1
+
+    fila = files[posicio[0].upper()]
+    columna = int(posicio[1])
 
     if columna < 0 or columna > 3:
-        return pos
+        return -1
     
     pos = (fila, columna)
     return pos
@@ -295,7 +302,7 @@ def posicio_valida(posicio, descoberts):
     """
     pos = fila_columna(posicio)
 
-    if pos in descoberts or pos == (-1, -1):
+    if pos in descoberts or pos == -1:
         return False
     
     return True
@@ -326,17 +333,16 @@ def jugada_usuari(tauler_oponent, descoberts):
         jugada_usuari(tauler_oponent, descoberts)
           # Demana la posició a descobrir
     """
-    dibuixa_tauler_secret(tauler_oponent, descoberts)
-
     while True:
+        dibuixa_tauler_secret(tauler_oponent, descoberts)
         posicio = input("Introdueix una posicio: ")
 
-        if not posicio_valida(posicio):
-            print("Posició no vàlida. Torna a provar.")
-        else:
+        if posicio_valida(posicio, descoberts):
             fila, columna = fila_columna(posicio)
-            descoberts.append((fila, columna))
+            descoberts.add((fila, columna))
             return tauler_oponent[fila][columna] 
+        else:
+            print("Posició no vàlida. Torna a provar.")
 
 def jugada_oponent(tauler_usuari, descoberts):
     """
@@ -367,7 +373,7 @@ def jugada_oponent(tauler_usuari, descoberts):
         columna = random.randint(0, 4)
 
         if (fila, columna) not in descoberts:
-            descoberts.append((fila, columna))
+            descoberts.add((fila, columna))
             return tauler_usuari[fila][columna]
 
 def esborra_del_tauler(tauler, nom):
@@ -390,11 +396,10 @@ def esborra_del_tauler(tauler, nom):
         esborra_del_tauler(tauler, 'Phillip')
           # El tauler tindrà la posició de 'Phillip' buida.
     """
-    for fila in range(3):
-        for columna in range(4):
-            if tauler[fila][columna] == nom:
-                tauler[fila][columna] == ""
-                return None
+    for fila in tauler:
+        for columna in range(len(fila)):
+            if fila[columna] == nom:
+                fila[columna] = ""
 
 def joc_del_qui_es_qui():
     """
@@ -464,7 +469,11 @@ def mainRun():
             0) Sortir
             Escull una opció:
     """
+    nom = None
+    oponent = None
+    
     while True:
+        clearScreen()
         print("""
 Qui és qui?
 1) Escull el teu nom
@@ -474,19 +483,19 @@ Qui és qui?
         """)
         opcio = int(input("Escull una opció: "))
 
-        nom = ""
-        oponent = ""
-
         if opcio == 1:
             nom = escriu_nom()
         elif opcio == 2:
             oponent = selecciona_oponent()
         elif opcio == 3:
-            joc_del_qui_es_qui()
+            if nom and oponent:
+                joc_del_qui_es_qui()
+            else:
+                print("Error! Has d'escollir el nom i l'oponent abans de jugar.")
         elif opcio == 0:
             break
         else:
-            print("Opció incorrecta")
+            print("Opció no vàlida.")
 
 # No canvieu això o no passarà el test
 if __name__ == "__main__":

@@ -12,17 +12,17 @@ class TestGeneraNoms(unittest.TestCase):
         self.expected_names = ['Phillip', 'Susan', 'Herman', 'Anne', 'Claire', 'Richard', 'Tom', 'Max', 'Sam', 'Anita', 'Joe', 'Maria']
 
     def test_genera_noms_length(self):
-        """Test that genera_noms returns a list of 12 names"""
+        #Test that genera_noms returns a list of 12 names#
         result = genera_noms()
         self.assertEqual(len(result), 12, "The returned list should contain 12 names")
 
     def test_genera_noms_content(self):
-        """Test that genera_noms returns a list containing all expected names"""
+        #Test that genera_noms returns a list containing all expected names#
         result = genera_noms()
         self.assertSetEqual(set(result), set(self.expected_names), "The returned list should contain all expected names")
 
     def test_genera_noms_shuffled(self):
-        """Test that genera_noms returns a shuffled list"""
+        #Test that genera_noms returns a shuffled list#
         # We'll run the function multiple times to ensure it's shuffled
         results = [genera_noms() for _ in range(10)]
         
@@ -32,7 +32,7 @@ class TestGeneraNoms(unittest.TestCase):
 
     @patch('random.shuffle')
     def test_genera_noms_uses_shuffle(self, mock_shuffle):
-        """Test that genera_noms uses random.shuffle"""
+        #Test that genera_noms uses random.shuffle#
         genera_noms()
         mock_shuffle.assert_called_once()
 
@@ -41,18 +41,18 @@ class TestEscullCarta(unittest.TestCase):
         self.expected_names = ['Phillip', 'Susan', 'Herman', 'Anne', 'Claire', 'Richard', 'Tom', 'Max', 'Sam', 'Anita', 'Joe', 'Maria']
 
     def test_escull_carta_returns_string(self):
-        """Test that escull_carta returns a string"""
+        #Test that escull_carta returns a string
         result = escull_carta()
         self.assertIsInstance(result, str, "The function should return a string")
 
     def test_escull_carta_returns_valid_name(self):
-        """Test that escull_carta returns a name from the expected list"""
+        #Test that escull_carta returns a name from the expected list#
         result = escull_carta()
         self.assertIn(result, self.expected_names, "The returned name should be in the list of expected names")
 
     @patch('C_QuiEsQui.genera_noms')
     def test_escull_carta_returns_last_name(self, mock_genera_noms):
-        """Test that escull_carta returns the last name from the generated list"""
+        #Test that escull_carta returns the last name from the generated list#
         mock_baralla = ['Anne', 'Tom', 'Susan']
         mock_genera_noms.return_value = mock_baralla
         result = escull_carta()
@@ -60,7 +60,7 @@ class TestEscullCarta(unittest.TestCase):
 
     @patch('C_QuiEsQui.genera_noms')
     def test_escull_carta_calls_genera_noms(self, mock_genera_noms):
-        """Test that escull_carta calls genera_noms"""
+        #Test that escull_carta calls genera_noms#
         escull_carta()
         mock_genera_noms.assert_called_once()
 
@@ -69,27 +69,27 @@ class TestGeneraTauler(unittest.TestCase):
         self.expected_names = ['Phillip', 'Susan', 'Herman', 'Anne', 'Claire', 'Richard', 'Tom', 'Max', 'Sam', 'Anita', 'Joe', 'Maria']
 
     def test_genera_tauler_structure(self):
-        """Test que genera_tauler retorna una llista de 3 llistes, cadascuna amb 4 elements"""
+        #Test que genera_tauler retorna una llista de 3 llistes, cadascuna amb 4 elements#
         tauler = genera_tauler()
         self.assertEqual(len(tauler), 3, "El tauler hauria de tenir 3 files")
         for fila in tauler:
             self.assertEqual(len(fila), 4, "Cada fila hauria de tenir 4 elements")
 
     def test_genera_tauler_content(self):
-        """Test que genera_tauler conté tots els noms esperats"""
+        #Test que genera_tauler conté tots els noms esperats#
         tauler = genera_tauler()
         noms_tauler = [nom for fila in tauler for nom in fila]
         self.assertSetEqual(set(noms_tauler), set(self.expected_names), "El tauler hauria de contenir tots els noms esperats")
 
     @patch('C_QuiEsQui.genera_noms')
     def test_genera_tauler_uses_genera_noms(self, mock_genera_noms):
-        """Test que genera_tauler crida genera_noms"""
+        #Test que genera_tauler crida genera_noms#
         mock_genera_noms.return_value = self.expected_names
         genera_tauler()
         mock_genera_noms.assert_called_once()
 
     def test_genera_tauler_shuffled(self):
-        """Test que genera_tauler retorna un tauler barrejat"""
+        #Test que genera_tauler retorna un tauler barrejat#
         taulers = [genera_tauler() for _ in range(10)]
         
         # Comprovem que almenys un tauler és diferent dels altres
@@ -101,18 +101,18 @@ class TestGeneraPartida(unittest.TestCase):
         self.expected_names = ['Phillip', 'Susan', 'Herman', 'Anne', 'Claire', 'Richard', 'Tom', 'Max', 'Sam', 'Anita', 'Joe', 'Maria']
 
     def test_genera_partida_structure(self):
-        """Test que genera_partida retorna una llista amb 4 elements"""
+        #Test que genera_partida retorna una llista amb 4 elements#
         partida = genera_partida()
         self.assertEqual(len(partida), 4, "genera_partida hauria de retornar 4 elements")
 
     def test_genera_partida_personatges(self):
-        """Test que els dos primers elements són personatges vàlids"""
+        #Test que els dos primers elements són personatges vàlids#
         partida = genera_partida()
         self.assertIn(partida[0], self.expected_names, "El personatge de l'usuari hauria de ser un nom vàlid")
         self.assertIn(partida[1], self.expected_names, "El personatge de l'ordinador hauria de ser un nom vàlid")
 
     def test_genera_partida_taulers(self):
-        """Test que els dos últims elements són taulers vàlids"""
+        #Test que els dos últims elements són taulers vàlids#
         partida = genera_partida()
         for tauler in partida[2:]:
             self.assertEqual(len(tauler), 3, "Cada tauler hauria de tenir 3 files")
@@ -122,7 +122,7 @@ class TestGeneraPartida(unittest.TestCase):
     @patch('C_QuiEsQui.escull_carta')
     @patch('C_QuiEsQui.genera_tauler')
     def test_genera_partida_calls(self, mock_genera_tauler, mock_escull_carta):
-        """Test que genera_partida crida les funcions correctes"""
+        #Test que genera_partida crida les funcions correctes#
         mock_escull_carta.side_effect = ['Maria', 'Tom']
         mock_genera_tauler.return_value = [['Phillip', 'Susan', 'Herman', 'Anne']] * 3
 
@@ -132,7 +132,7 @@ class TestGeneraPartida(unittest.TestCase):
         self.assertEqual(mock_genera_tauler.call_count, 2, "genera_tauler hauria de ser cridat dues vegades")
 
     def test_genera_partida_independent_personatges(self):
-        """Test que els personatges de l'usuari i l'ordinador són independents"""
+        #Test que els personatges de l'usuari i l'ordinador són independents#
         partides = [genera_partida() for _ in range(10)]
         personatges_diferents = any(partida[0] != partida[1] for partida in partides)
         self.assertTrue(personatges_diferents, "Els personatges de l'usuari i l'ordinador haurien de ser independents")
@@ -140,14 +140,14 @@ class TestGeneraPartida(unittest.TestCase):
 class TestEscriuNom(unittest.TestCase):
     @patch('builtins.input', side_effect=['Albert'])
     def test_escriu_nom_valid(self, mock_input):
-        """Test que escriu_nom accepta un nom vàlid"""
+        #Test que escriu_nom accepta un nom vàlid#
         resultat = escriu_nom()
         self.assertEqual(resultat, 'Albert', "La funció hauria de retornar el nom vàlid introduït")
 
     @patch('builtins.input', side_effect=['Albert123', 'Maria'])
     @patch('sys.stdout', new_callable=StringIO)
     def test_escriu_nom_invalid_then_valid(self, mock_stdout, mock_input):
-        """Test que escriu_nom rebutja un nom invàlid i després accepta un de vàlid"""
+        #Test que escriu_nom rebutja un nom invàlid i després accepta un de vàlid#
         resultat = escriu_nom()
         self.assertEqual(resultat, 'Maria', "La funció hauria de retornar el segon nom vàlid introduït")
         self.assertIn("Error: El nom no pot contenir números. Torna a provar.", mock_stdout.getvalue())
@@ -155,20 +155,20 @@ class TestEscriuNom(unittest.TestCase):
     @patch('builtins.input', side_effect=['123', '456', 'Anna'])
     @patch('sys.stdout', new_callable=StringIO)
     def test_escriu_nom_multiple_invalid(self, mock_stdout, mock_input):
-        """Test que escriu_nom rebutja múltiples noms invàlids i finalment accepta un de vàlid"""
+        #Test que escriu_nom rebutja múltiples noms invàlids i finalment accepta un de vàlid#
         resultat = escriu_nom()
         self.assertEqual(resultat, 'Anna', "La funció hauria de retornar el nom vàlid final")
         self.assertEqual(mock_stdout.getvalue().count("Error: El nom no pot contenir números. Torna a provar."), 2)
 
     @patch('builtins.input', side_effect=['', 'Joan'])
     def test_escriu_nom_empty_then_valid(self, mock_input):
-        """Test que escriu_nom accepta un nom buit i després un de vàlid"""
+        #Test que escriu_nom accepta un nom buit i després un de vàlid#
         resultat = escriu_nom()
         self.assertEqual(resultat, '', "La funció hauria de retornar el nom buit com a vàlid")
 
     @patch('builtins.input', side_effect=['   ', 'Pere'])
     def test_escriu_nom_whitespace_then_valid(self, mock_input):
-        """Test que escriu_nom accepta un nom amb només espais en blanc i després un de vàlid"""
+        #Test que escriu_nom accepta un nom amb només espais en blanc i després un de vàlid#
         resultat = escriu_nom()
         self.assertEqual(resultat, '   ', "La funció hauria de retornar el nom amb espais en blanc com a vàlid")
 
@@ -235,7 +235,7 @@ class TestDibuixaTaulerSecret(unittest.TestCase):
 
     @patch('sys.stdout', new_callable=StringIO)
     def test_dibuixa_tauler_secret_buit(self, mock_stdout):
-        """Test que dibuixa_tauler_secret dibuixa correctament un tauler sense descoberts"""
+        #Test que dibuixa_tauler_secret dibuixa correctament un tauler sense descoberts#
         descoberts = set()
         dibuixa_tauler_secret(self.tauler, descoberts)
         expected_output = "  0 1 2 3\nA ? ? ? ?\nB ? ? ? ?\nC ? ? ? ?\n"
@@ -243,7 +243,7 @@ class TestDibuixaTaulerSecret(unittest.TestCase):
 
     @patch('sys.stdout', new_callable=StringIO)
     def test_dibuixa_tauler_secret_amb_descoberts(self, mock_stdout):
-        """Test que dibuixa_tauler_secret dibuixa correctament un tauler amb algunes caselles descobertes"""
+        #Test que dibuixa_tauler_secret dibuixa correctament un tauler amb algunes caselles descobertes#
         descoberts = {(0, 0), (1, 1)}
         dibuixa_tauler_secret(self.tauler, descoberts)
         expected_output = "  0 1 2 3\nA X ? ? ?\nB ? X ? ?\nC ? ? ? ?\n"
@@ -251,7 +251,7 @@ class TestDibuixaTaulerSecret(unittest.TestCase):
 
     @patch('sys.stdout', new_callable=StringIO)
     def test_dibuixa_tauler_secret_tot_descobert(self, mock_stdout):
-        """Test que dibuixa_tauler_secret dibuixa correctament un tauler completament descobert"""
+        #Test que dibuixa_tauler_secret dibuixa correctament un tauler completament descobert#
         descoberts = {(i, j) for i in range(3) for j in range(4)}
         dibuixa_tauler_secret(self.tauler, descoberts)
         expected_output = "  0 1 2 3\nA X X X X\nB X X X X\nC X X X X\n"
@@ -259,7 +259,7 @@ class TestDibuixaTaulerSecret(unittest.TestCase):
 
     @patch('sys.stdout', new_callable=StringIO)
     def test_dibuixa_tauler_secret_format(self, mock_stdout):
-        """Test que dibuixa_tauler_secret utilitza el format correcte per a les files i columnes"""
+        #Test que dibuixa_tauler_secret utilitza el format correcte per a les files i columnes#
         descoberts = set()
         dibuixa_tauler_secret(self.tauler, descoberts)
         output = mock_stdout.getvalue().split('\n')
@@ -270,7 +270,7 @@ class TestDibuixaTaulerSecret(unittest.TestCase):
 
     @patch('sys.stdout', new_callable=StringIO)
     def test_dibuixa_tauler_secret_no_return(self, mock_stdout):
-        """Test que dibuixa_tauler_secret no retorna res"""
+        #Test que dibuixa_tauler_secret no retorna res#
         descoberts = set()
         result = dibuixa_tauler_secret(self.tauler, descoberts)
         self.assertIsNone(result, "La funció no hauria de retornar res")
@@ -279,36 +279,36 @@ class TestDibuixaTaulerSecret(unittest.TestCase):
 
 class TestFilaColumna(unittest.TestCase):
     def test_posicio_valida(self):
-        """Test que fila_columna retorna les coordenades correctes per a posicions vàlides"""
+        #Test que fila_columna retorna les coordenades correctes per a posicions vàlides#
         self.assertEqual(fila_columna("A0"), (0, 0), "A0 hauria de retornar (0, 0)")
         self.assertEqual(fila_columna("B2"), (1, 2), "B2 hauria de retornar (1, 2)")
         self.assertEqual(fila_columna("C3"), (2, 3), "C3 hauria de retornar (2, 3)")
 
     def test_posicio_invalida_fora_de_rang(self):
-        """Test que fila_columna retorna -1 per a posicions fora de rang"""
+        #Test que fila_columna retorna -1 per a posicions fora de rang#
         self.assertEqual(fila_columna("D0"), -1, "D0 hauria de retornar -1 (fila invàlida)")
         self.assertEqual(fila_columna("A4"), -1, "A4 hauria de retornar -1 (columna invàlida)")
         self.assertEqual(fila_columna("D4"), -1, "D4 hauria de retornar -1 (fila i columna invàlides)")
 
     def test_posicio_invalida_format_incorrecte(self):
-        """Test que fila_columna retorna -1 per a posicions amb format incorrecte"""
+        #Test que fila_columna retorna -1 per a posicions amb format incorrecte#
         self.assertEqual(fila_columna("A"), -1, "A hauria de retornar -1 (falta la columna)")
         self.assertEqual(fila_columna("12"), -1, "12 hauria de retornar -1 (falta la lletra de fila)")
         self.assertEqual(fila_columna("ABC"), -1, "ABC hauria de retornar -1 (massa caràcters)")
         self.assertEqual(fila_columna(""), -1, "Una cadena buida hauria de retornar -1")
 
     def test_posicio_valida_minuscules(self):
-        """Test que fila_columna funciona correctament amb lletres minúscules"""
+        #Test que fila_columna funciona correctament amb lletres minúscules#
         self.assertEqual(fila_columna("a0"), (0, 0), "a0 hauria de retornar (0, 0)")
         self.assertEqual(fila_columna("b2"), (1, 2), "b2 hauria de retornar (1, 2)")
 
     def test_posicio_invalida_no_numeros(self):
-        """Test que fila_columna retorna -1 per a posicions amb caràcters no numèrics a la columna"""
+        #Test que fila_columna retorna -1 per a posicions amb caràcters no numèrics a la columna#
         self.assertEqual(fila_columna("AA"), -1, "AA hauria de retornar -1 (columna no numèrica)")
         self.assertEqual(fila_columna("A-"), -1, "A- hauria de retornar -1 (columna no numèrica)")
 
     def test_posicio_invalida_numeros_negatius(self):
-        """Test que fila_columna retorna -1 per a posicions amb números negatius"""
+        #Test que fila_columna retorna -1 per a posicions amb números negatius#
         self.assertEqual(fila_columna("A-1"), -1, "A-1 hauria de retornar -1 (columna negativa)")
 
 class TestPosicioValida(unittest.TestCase):
@@ -316,18 +316,18 @@ class TestPosicioValida(unittest.TestCase):
         self.descoberts = {(0, 0), (1, 1)}
 
     def test_posicio_valida_no_descoberta(self):
-        """Test que posicio_valida retorna True per a una posició vàlida no descoberta"""
+        #Test que posicio_valida retorna True per a una posició vàlida no descoberta#
         self.assertTrue(posicio_valida("A1", self.descoberts))
         self.assertTrue(posicio_valida("B2", self.descoberts))
         self.assertTrue(posicio_valida("C3", self.descoberts))
 
     def test_posicio_valida_descoberta(self):
-        """Test que posicio_valida retorna False per a una posició vàlida però ja descoberta"""
+        #Test que posicio_valida retorna False per a una posició vàlida però ja descoberta#
         self.assertFalse(posicio_valida("A0", self.descoberts))
         self.assertFalse(posicio_valida("B1", self.descoberts))
 
     def test_posicio_invalida(self):
-        """Test que posicio_valida retorna False per a posicions invàlides"""
+        #Test que posicio_valida retorna False per a posicions invàlides#
         self.assertFalse(posicio_valida("D0", self.descoberts))
         self.assertFalse(posicio_valida("A4", self.descoberts))
         self.assertFalse(posicio_valida("AA", self.descoberts))
@@ -335,19 +335,19 @@ class TestPosicioValida(unittest.TestCase):
 
     @patch('C_QuiEsQui.fila_columna')
     def test_fila_columna_called(self, mock_fila_columna):
-        """Test que posicio_valida crida a fila_columna"""
+        #Test que posicio_valida crida a fila_columna#
         mock_fila_columna.return_value = (0, 1)
         posicio_valida("A1", self.descoberts)
         mock_fila_columna.assert_called_once_with("A1")
 
     def test_descoberts_empty(self):
-        """Test que posicio_valida funciona correctament amb un conjunt buit de descoberts"""
+        #Test que posicio_valida funciona correctament amb un conjunt buit de descoberts#
         descoberts_buits = set()
         self.assertTrue(posicio_valida("A0", descoberts_buits))
         self.assertTrue(posicio_valida("B1", descoberts_buits))
 
     def test_descoberts_full(self):
-        """Test que posicio_valida retorna False quan totes les posicions estan descobertes"""
+        #Test que posicio_valida retorna False quan totes les posicions estan descobertes#
         descoberts_complets = {(i, j) for i in range(3) for j in range(4)}
         self.assertFalse(posicio_valida("A0", descoberts_complets))
         self.assertFalse(posicio_valida("C3", descoberts_complets))
@@ -682,7 +682,7 @@ class TestMainRun(unittest.TestCase):
         # Verificar la salida
         output = captured_output.getvalue()
         self.assertIn("Opció no vàlida.", output)
-
+  
 if __name__ == '__main__':
     unittest.main()
 
