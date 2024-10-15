@@ -12,12 +12,14 @@ casella_mesures = {
     "alt": 2,
     "ampla": 8
 }
+
 tauler_mesures = {
     "ampla_total": 64,
     "ampla_partida": 10,
     "files": 7,
     "columnes": 7
 }
+
 jugadors = {
     "Vermell": {
         "nom": "Vermell",
@@ -167,9 +169,9 @@ def imprimeix_casella_horizontal(nom, cases, hotels, jugadors, posicio):
         primera_linia += f"".ljust(6, "-")
 
     if hotels > 0:
-        primera_linia += f"{hotels}H"
+        primera_linia += f"{hotels}H+"
     else:
-        primera_linia += f"".ljust(2, "-")
+        primera_linia += f"".ljust(2, "-") + "+"
     
     amplada = casella_mesures["ampla"]
     final_linia = "|"
