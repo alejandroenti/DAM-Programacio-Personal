@@ -89,18 +89,22 @@ def app_run():
 
     if mouse_down:
         current_number = matrix[pos_y][pos_x]
-        up_number = matrix[pos_y - 1][pos_x]
-        down_number = matrix[pos_y - 1][pos_x]
-        left_number = matrix[pos_y][pos_x - 1]
-        right_number = matrix[pos_y][pos_x + 1]
-        if pos_y > 0 and up_number == current_number:
-            matrix[pos_y - 1][pos_x] = None
-        if pos_y < matrix_size - 1 and down_number == current_number:
-            matrix[pos_y + 1][pos_x] = None
-        if pos_x > 0 and left_number == current_number:
-            matrix[pos_y][pos_x - 1] = None
-        if pos_x < matrix_size - 1 and right_number == current_number:
-            matrix[pos_y][pos_x + 1] = None
+        if pos_y > 0:
+            up_number = matrix[pos_y - 1][pos_x]
+            if up_number == current_number:
+                matrix[pos_y - 1][pos_x] = None
+        if pos_y < matrix_size - 1:
+            down_number = matrix[pos_y - 1][pos_x]
+            if down_number == current_number:
+                matrix[pos_y + 1][pos_x] = None
+        if pos_x > 0:
+            left_number = matrix[pos_y][pos_x - 1]
+            if left_number == current_number:
+                matrix[pos_y][pos_x - 1] = None
+        if pos_x < matrix_size - 1:
+            right_number = matrix[pos_y][pos_x + 1]
+            if right_number == current_number:
+                matrix[pos_y][pos_x + 1] = None
         matrix[pos_y][pos_x] = None
 
 # Dibuixar
