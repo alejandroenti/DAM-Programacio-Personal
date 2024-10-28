@@ -94,7 +94,7 @@ def app_run():
             if up_number == current_number:
                 matrix[pos_y - 1][pos_x] = None
         if pos_y < matrix_size - 1:
-            down_number = matrix[pos_y - 1][pos_x]
+            down_number = matrix[pos_y + 1][pos_x]
             if down_number == current_number:
                 matrix[pos_y + 1][pos_x] = None
         if pos_x > 0:
