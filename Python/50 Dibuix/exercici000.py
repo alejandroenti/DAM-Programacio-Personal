@@ -57,7 +57,21 @@ def app_draw():
     utils.draw_grid(pygame, screen, 50)
 
     # Resol aquí l'exercici
-    pass
+    width_line = 5
+    width_update = 50
+    # Bucle línies blaves
+    init_coord = (100, 100)
+    end_coord = [100, 400]
+    for i in range(7):
+        pygame.draw.line(screen, BLUE, init_coord, end_coord, width_line)
+        end_coord[0] += width_update
+
+    # Bucle línies verdes
+    init_coord = (100, 400)
+    end_coord = [400, 100]
+    for i in range(7):
+        pygame.draw.line(screen, GREEN, init_coord, end_coord, width_line)
+        end_coord[1] += width_update
 
     # Actualitzar el dibuix a la finestra
     pygame.display.update()

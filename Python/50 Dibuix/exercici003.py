@@ -29,6 +29,9 @@ dir_y = "none"
 pox_x = 100
 pox_y = 100
 
+width_player = 15
+height_player = 15
+
 # Bucle de l'aplicació
 def main():
     is_looping = True
@@ -86,8 +89,8 @@ def app_run():
 
     if (dir_x == "right"):
         pox_x = pox_x + displacement
-        if (pox_x > 200):
-            pox_x = 200
+        if (pox_x > 200 - width_player):
+            pox_x = 200 - width_player
     elif (dir_x == "left"):
         pox_x = pox_x - displacement
         if (pox_x < 100):
@@ -95,8 +98,8 @@ def app_run():
 
     if (dir_y == "down"):
         pox_y = pox_y + displacement
-        if (pox_y > 200):
-            pox_y = 200
+        if (pox_y > 200 - height_player):
+            pox_y = 200 - height_player
     elif (dir_y == "up"):
         pox_y = pox_y - displacement
         if (pox_y < 100):

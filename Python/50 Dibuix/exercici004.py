@@ -78,7 +78,17 @@ def app_run():
         eye_left["y"] = 205
 
     eye_right["x"] = mouse_pos["x"] - 10
+    if (eye_right["x"] < 350):
+        eye_right["x"] = 350
+    elif (eye_right["x"] > 380):
+        eye_right["x"] = 380
+
     eye_right["y"] = mouse_pos["y"] - 10
+    if (eye_right["y"] < 150):
+        eye_right["y"] = 150
+    elif (eye_right["y"] > 205):
+        eye_right["y"] = 205
+
 
 # Dibuixar
 def app_draw():

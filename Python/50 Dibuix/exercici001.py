@@ -57,7 +57,19 @@ def app_draw():
     utils.draw_grid(pygame, screen, 50)
 
     # Resol aquí l'exercici
-    pass
+    #Pentágono
+    pygame.draw.polygon(screen, GREEN, [(150, 100), (100, 150), (125, 200), (175, 200), (200, 150)], 5)
+
+    #Hexágono
+    pygame.draw.polygon(screen, RED, [(300, 100), (250, 150), (300, 200), (350, 200), (400, 150), (350, 100)])
+    pygame.draw.polygon(screen, GREEN, [(300, 100), (250, 150), (300, 200), (350, 200), 
+    (400, 150), (350, 100)], 5)
+
+    # Octágono
+    pygame.draw.polygon(screen, PURPLE, [(150, 300), (100, 350), (100, 400), (150, 450), (200, 450), (250, 400), (250, 350), (200, 300)])
+
+    # Arco
+    pygame.draw.arc(screen, ORANGE, pygame.Rect(400, 250, 200, 100), math.radians(45), math.radians(180), 5)
 
     # Actualitzar el dibuix a la finestra
     pygame.display.update()
