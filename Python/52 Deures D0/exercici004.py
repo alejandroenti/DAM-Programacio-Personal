@@ -15,8 +15,11 @@ clock = pygame.time.Clock()
 
 # Definir la finestra
 screen = pygame.display.set_mode((640, 480))
-pygame.display.set_caption('Window Title')
+pygame.display.set_caption('Alejandro Lopez - Exercici 4')
 
+# Definim les variables globals
+window_width, window_height = screen.get_size()
+punts = []
 
 # Bucle de l'aplicació
 def main():
@@ -24,7 +27,10 @@ def main():
 
     is_looping = True
 
-    pass
+    for i in range(10):
+        point_x = random.randint(0, window_width)
+        point_y = random.randint(0, window_height)
+        punts.append((point_x, point_y))
 
     while is_looping:
         is_looping = app_events()
@@ -46,14 +52,15 @@ def app_events():
 
 # Fer càlculs
 def app_run():
-    global list
+    global punts
 
 # Dibuixar
 def app_draw():
     screen.fill(WHITE)
     utils.draw_grid(pygame, screen, 50)
-    
-    pass
+
+    # Dibuixem el polígon
+    pygame.draw.polygon(screen, BLACK, punts, 5)
 
     pygame.display.update()
 

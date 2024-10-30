@@ -15,7 +15,7 @@ clock = pygame.time.Clock()
 
 # Definir la finestra
 screen = pygame.display.set_mode((640, 480))
-pygame.display.set_caption('Window Title')
+pygame.display.set_caption('Alejandro Lopez - Exercici 3')
 
 # Bucle de l'aplicació
 def main():
@@ -48,7 +48,14 @@ def app_draw():
     screen.fill(WHITE)
     utils.draw_grid(pygame, screen, 50)
     
-    pass
+    # Bucle per als cercles vermells i blancs
+    for index, radius in enumerate(range(225, 24, -25)):
+        color = RED if index % 2 == 0 else WHITE
+        pygame.draw.circle(screen, color, (350, 250), radius)
+
+    # Bucle per als cercles negres
+    for radius in range(25, 226, 25):
+        pygame.draw.circle(screen, BLACK, (350, 250), radius, 5)
 
     pygame.display.update()
 

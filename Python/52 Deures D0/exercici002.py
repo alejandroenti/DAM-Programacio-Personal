@@ -14,7 +14,16 @@ clock = pygame.time.Clock()
 
 # Definir la finestra
 screen = pygame.display.set_mode((640, 480))
-pygame.display.set_caption('Window Title')
+pygame.display.set_caption('Alejandro Lopez - Exercici 2')
+
+# Definim variables globals
+path_shinnosuke = os.path.join(os.path.dirname(__file__), "./assets/exercici002/shinnosuke.png")
+im_shinnosuke = pygame.image.load(path_shinnosuke).convert_alpha()
+im_shinnosuke = utils.scale_image(pygame, im_shinnosuke, target_width=100)
+
+path_shiro = os.path.join(os.path.dirname(__file__), "./assets/exercici002/shiro.png")
+im_shiro = pygame.image.load(path_shiro).convert_alpha()
+im_shiro = utils.scale_image(pygame, im_shiro, target_width=75)
 
 # Bucle de l'aplicació
 def main():
@@ -52,7 +61,9 @@ def app_draw():
     screen.fill(WHITE)
     utils.draw_grid(pygame, screen, 50)
     
-    pass
+    # Posicionem les dues imatges
+    screen.blit(im_shinnosuke, (325, 155))
+    screen.blit(im_shiro, (225, 205))
 
     pygame.display.update()
 

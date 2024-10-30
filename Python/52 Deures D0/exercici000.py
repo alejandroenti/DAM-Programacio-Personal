@@ -19,7 +19,7 @@ clock = pygame.time.Clock()
 
 # Definir la finestra
 screen = pygame.display.set_mode((640, 480))
-pygame.display.set_caption('Window Title')
+pygame.display.set_caption('Alejandro Lopez - Exercici 0')
 
 # Bucle de l'aplicació
 def main():
@@ -52,7 +52,15 @@ def app_draw():
     screen.fill(WHITE)
     utils.draw_grid(pygame, screen, 50)
     
-    pass
+    # Quadrat rosa
+    pygame.draw.rect(screen, PINK, (150, 200, 50, 50), 5)
+    # Triangle verd
+    pygame.draw.polygon(screen, GREEN, [(275, 200), (300, 250), (250, 250)], 5)
+    # Creu blava
+    pygame.draw.line(screen, BLUE, (350, 200), (400, 250), 5)
+    pygame.draw.line(screen, BLUE, (350, 250), (400, 200), 5)
+    # Cerce vermell 
+    pygame.draw.circle(screen, RED, (475, 225), 25, 5)
 
     pygame.display.update()
 
