@@ -15,7 +15,13 @@ clock = pygame.time.Clock()
 
 # Definir la finestra
 screen = pygame.display.set_mode((640, 480))
-pygame.display.set_caption('Window Title')
+pygame.display.set_caption('Alejandro Lopez - Exercici 6')
+
+# Definim les variables globals
+cela_amplada = 50
+cela_alcada = 50
+cela_x_inici = 50
+cela_y_inici = 50
 
 # Bucle de l'aplicació
 def main():
@@ -45,6 +51,7 @@ def app_run():
 
 # Dibuixar
 def app_draw():
+    global cela_x_inici, cela_y_inici, cela_amplada, cela_alcada
     
     # Pintar el fons de blanc
     screen.fill(WHITE)
@@ -52,7 +59,16 @@ def app_draw():
     # Dibuixar la graella
     utils.draw_grid(pygame, screen, 50)
 
-    pass
+    for row in range(8):
+        for column in range(8):
+            # Escollim el color segons la fila i la columna
+            color = GRAY if (row % 2 == 0 and column % 2 == 0) or (row % 2 != 0 and column % 2 != 0) else BLACK
+            pygame.draw.rect(screen, color, (cela_x_inici, cela_y_inici, cela_amplada, cela_alcada))
+            cela_x_inici += cela_amplada
+        
+        cela_x_inici = cela_amplada
+        cela_y_inici += cela_alcada
+    cela_y_inici = cela_alcada
 
     # Actualitzar el dibuix a la finestra
     pygame.display.update()
