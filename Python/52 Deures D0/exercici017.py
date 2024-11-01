@@ -3,6 +3,7 @@ os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 import pygame
 import sys
 import utils
+import math
 
 # Definir colors
 WHITE = (255, 255, 255)
@@ -14,7 +15,10 @@ clock = pygame.time.Clock()
 
 # Definir la finestra
 screen = pygame.display.set_mode((640, 480))
-pygame.display.set_caption('Window Title')
+pygame.display.set_caption('Alejandro Lopez - Exercici 17')
+
+# Definim les variables globals
+line_width = 5
 
 # Bucle de l'aplicació
 def main():
@@ -44,6 +48,7 @@ def app_run():
 
 # Dibuixar
 def app_draw():
+    global line_width
     
     # Pintar el fons de blanc
     screen.fill(WHITE)
@@ -51,7 +56,12 @@ def app_draw():
     # Dibuixar la graella
     utils.draw_grid(pygame, screen, 50)
 
-    pass
+    ## Dibuixem les línies
+    for angle in range(0, 361, 15):
+        start = utils.point_on_circle((300, 250), 25, angle)
+        end = utils.point_on_circle((300, 250), 150, angle)
+
+        pygame.draw.line(screen, BLACK, start, end, line_width)
 
     # Actualitzar el dibuix a la finestra
     pygame.display.update()

@@ -18,7 +18,17 @@ clock = pygame.time.Clock()
 
 # Definir la finestra
 screen = pygame.display.set_mode((640, 480))
-pygame.display.set_caption('Window Title')
+pygame.display.set_caption('Alejandro Lopez - Exercici 22')
+
+# Definim les variables globals
+mouse_pos = { "x": -1, "y": -1 }
+
+total_rects = 22
+heights = [5 for _ in range(total_rects)]
+max_distance = 200  # Distància màxima per al mínim efecte
+
+cell_x = 0
+cell_size = 25
 
 # Bucle de l'aplicació
 def main():
@@ -43,11 +53,48 @@ def app_events():
     for event in pygame.event.get():
         if event.type == pygame.QUIT: # Botó tancar finestra
             return False
+        elif event.type == pygame.MOUSEMOTION:
+            if mouse_inside:
+                mouse_pos["x"] = event.pos[0]
+                mouse_pos["y"] = event.pos[1]
+            else:
+                mouse_pos["x"] = -1
+                mouse_pos["y"] = -1
     return True
 
 # Fer càlculs
 def app_run():
-    pass
+    global mouse_pos, heights, total_rects, max_distance, cell_x, cell_size
+
+    cell_width = 25  # Amplada de cada casella
+
+    # Bucle 1: Comprovar si el ratolí està dins de qualsevol casella
+    inside_any_cell = False
+    for cnt in range(len(heights)):
+        # Posició horitzontal de la casella
+        cell_x = 50 + cnt * cell_width
+        cell_y_top = 250 - heights[cnt]
+        cell_y_bottom = 250
+
+        # Comprovar si el ratolí està dins dels límits d'aquesta casella
+        if cell_x <= mouse_pos["x"] < (cell_x + cell_width) and cell_y_top <= mouse_pos["y"] < cell_y_bottom:
+            inside_any_cell = True
+            break  # Sortir del bucle si ja hem trobat una casella que conté el ratolí
+
+    # Bucle 2: Assignar les alçades segons si el ratolí està dins o fora d'una casella
+    for cnt in range(len(heights)):
+        cell_x = 50 + cnt * cell_width + (cell_width / 2)  # Centre horitzontal
+
+        if inside_any_cell:
+            # Calcular la distància horitzontal
+            distance = abs(cell_x - mouse_pos["x"])
+
+            # Normalitzar la distància: propers a mida 50, llunyans a 5
+            max_distance = 200  # Distància màxima per al mínim efecte
+            heights[cnt] = max(5, 45 - min(distance, max_distance) * (40 / max_distance))
+        else:
+            # Si el ratolí no està dins de cap casella, fixar totes les alçades a 5
+            heights[cnt] = 5
 
 # Dibuixar
 def app_draw():
@@ -57,7 +104,9 @@ def app_draw():
     # Graella de fons
     utils.draw_grid(pygame, screen, 50)
 
-    pass
+    # Dibuixem les línies
+    for index, pos_x in enumerate(range(50, 576, 25)):
+        pygame.draw.rect(screen, BLACK, (pos_x, 250 - heights[index], 25, heights[index]))
 
     # Actualitzar el dibuix a la finestra
     pygame.display.update()
