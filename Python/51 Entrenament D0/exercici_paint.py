@@ -7,14 +7,12 @@ import pygame
 import sys
 import utils
 
-# Definir colors
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
-RED = (255, 0, 0)
-GREEN = (0, 255, 0)
-BLUE  = (0, 0, 255)
-PURPLE = (128, 0, 128)
-ORANGE = (255, 165, 0) 
+GRAY = (200, 200, 200)
+YELLOW = (255, 255, 70)
+
+BUTTON_SIZE = 20
 
 pygame.init()
 clock = pygame.time.Clock()
@@ -23,7 +21,17 @@ clock = pygame.time.Clock()
 screen = pygame.display.set_mode((640, 480))
 pygame.display.set_caption('Window Title')
 
-angle = 0
+# Variables globals
+mouse = { 
+    "x": -1, 
+    "y": -1,
+    "pressed": False
+}
+polygons = []
+line_width = 1
+buttons_width = []
+selected_color = BLACK
+buttons_color = []
 
 # Bucle de l'aplicació
 def main():
@@ -45,23 +53,17 @@ def app_events():
     for event in pygame.event.get():
         if event.type == pygame.QUIT: # Botó tancar finestra
             return False
+
     return True
 
-# Fer càlculs (resol aquí l'exercici)
+# Fer càlculs
 def app_run():
     pass
 
 # Dibuixar
 def app_draw():
-    
     # Pintar el fons de blanc
     screen.fill(WHITE)
-
-    # Dibuixar la graella
-    utils.draw_grid(pygame, screen, 50)
-
-    # Resol aquí l'exercici
-    pass
 
     # Actualitzar el dibuix a la finestra
     pygame.display.update()

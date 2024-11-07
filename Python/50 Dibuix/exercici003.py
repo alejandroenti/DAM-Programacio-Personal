@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import math
 import os
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
@@ -28,9 +30,6 @@ dir_y = "none"
 # Posició de l'objecte
 pox_x = 100
 pox_y = 100
-
-width_player = 15
-height_player = 15
 
 # Bucle de l'aplicació
 def main():
@@ -89,8 +88,8 @@ def app_run():
 
     if (dir_x == "right"):
         pox_x = pox_x + displacement
-        if (pox_x > 200 - width_player):
-            pox_x = 200 - width_player
+        if (pox_x > 200):
+            pox_x = 200
     elif (dir_x == "left"):
         pox_x = pox_x - displacement
         if (pox_x < 100):
@@ -98,8 +97,8 @@ def app_run():
 
     if (dir_y == "down"):
         pox_y = pox_y + displacement
-        if (pox_y > 200 - height_player):
-            pox_y = 200 - height_player
+        if (pox_y > 200):
+            pox_y = 200
     elif (dir_y == "up"):
         pox_y = pox_y - displacement
         if (pox_y < 100):
@@ -116,10 +115,10 @@ def app_draw():
     utils.draw_grid(pygame, screen, 50)
 
     # Draw limits
-    pygame.draw.rect(screen, BLUE, pygame.Rect(100, 100, 100, 100), 2)
+    pygame.draw.rect(screen, BLUE, (100, 100, 100, 100), 2)
 
     # Draw moving object
-    pygame.draw.rect(screen, ORANGE, pygame.Rect(pox_x, pox_y, 15, 15))
+    pygame.draw.rect(screen, ORANGE, (pox_x, pox_y, 15, 15))
 
     # Actualitzar el dibuix a la finestra
     pygame.display.update()

@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import math
 import os
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
@@ -57,21 +59,7 @@ def app_draw():
     utils.draw_grid(pygame, screen, 50)
 
     # Resol aquí l'exercici
-    width_line = 5
-    width_update = 50
-    # Bucle línies blaves
-    init_coord = (100, 100)
-    end_coord = [100, 400]
-    for i in range(7):
-        pygame.draw.line(screen, BLUE, init_coord, end_coord, width_line)
-        end_coord[0] += width_update
-
-    # Bucle línies verdes
-    init_coord = (100, 400)
-    end_coord = [400, 100]
-    for i in range(7):
-        pygame.draw.line(screen, GREEN, init_coord, end_coord, width_line)
-        end_coord[1] += width_update
+    pass
 
     # Actualitzar el dibuix a la finestra
     pygame.display.update()
