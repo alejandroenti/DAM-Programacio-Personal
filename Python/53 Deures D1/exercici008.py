@@ -22,7 +22,7 @@ clock = pygame.time.Clock()
 
 # Definir la finestra
 screen = pygame.display.set_mode((640, 480))
-pygame.display.set_caption('Window Title')
+pygame.display.set_caption('Alejandro López - Exercici 8')
 
 
 # Variables globals
@@ -34,9 +34,14 @@ buttons = [
     { "value": "down", "x": 25, "y": 50, "width": 25, "height": 25, "pressed": False },
 ]
 
+circle = {
+    "x": 525,
+    "y": 250,
+    "radius": 25,
+    "color": BLUE
+}
+
 direction = "up"
-position_y = 250
-radius = 25
 
 # Bucle de l'aplicació
 def main():
@@ -78,13 +83,33 @@ def app_events():
 
 # Fer càlculs
 def app_run():
-    global buttons, direction, position_y, radius
+    global buttons, direction, circle
 
-    pass
+    delta_time = clock.get_time() / 1000.0  # Convertir a segons
+
+    speed = 100
+
+    if mouse_data["pressed"]:
+        for button in buttons:
+            if utils.is_point_in_rect(mouse_data, button):
+                button["pressed"] = True
+    
+    elif mouse_data["released"]:
+        for button in buttons:
+            if button["pressed"]:
+                direction = button["value"]
+                button["pressed"] = False
+    
+    if direction == "up":
+        displacement = max(circle["radius"], circle["y"] - (speed * delta_time))
+    elif direction == "down":
+        displacement = min(screen.get_height() - circle["radius"], circle["y"] + (speed * delta_time))
+
+    circle["y"] = displacement
 
 # Dibuixar
 def app_draw():
-    global pos_x, pos_y
+    global mouse_data, buttons, font
 
     # Pintar el fons de blanc
     screen.fill(WHITE)
@@ -94,16 +119,35 @@ def app_draw():
         draw_button(button)
 
     # Draw circle
-    
+    center = (circle["x"], circle["y"])
+    pygame.draw.circle(screen, circle["color"], center, circle["radius"])
 
     # Draw 'mouse pressed' text
-    
+    if mouse_data["pressed"]:
+        position_x = 55
+        position_y = 38
+
+        string_surface = font.render(f"Mouse Pressed", False, BLACK)
+        string_rect = string_surface.get_rect()
+        string_rect.left = position_x
+        string_rect.centery = position_y
+
+        screen.blit(string_surface, string_rect)
 
     # Actualitzar el dibuix a la finestra
     pygame.display.update()
 
 def draw_button(button):
-    pass
+    global direction
+
+    rect = (button["x"], button["y"], button["width"], button["height"])
+
+    if button["pressed"] and direction != button["value"]:
+        pygame.draw.rect(screen, ORANGE, rect)
+    elif direction == button["value"]:
+        pygame.draw.rect(screen, BLUE, rect)
+
+    pygame.draw.rect(screen, BLACK, rect, 3)
 
 if __name__ == "__main__":
     main()
