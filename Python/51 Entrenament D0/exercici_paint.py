@@ -40,6 +40,8 @@ buttons_width = [
 selected_color = BLACK
 buttons_color = []
 
+padding = 20
+
 surface = pygame.Surface((640, 480))
 
 # Bucle de l'aplicació
@@ -103,7 +105,7 @@ def app_run():
 
 # Dibuixar
 def app_draw():
-    global points, buttons_width, buttons_color
+    global points, buttons_width, buttons_color, padding, selected_color
 
     # Pintar el fons de blanc
     screen.fill(WHITE)
@@ -118,6 +120,10 @@ def app_draw():
     for button_color in buttons_color:
         draw_button_color(button_color)
 
+    # Dibuixem quadre on es veu el color actual que hem seleccionat
+    rect = (350, 390, padding * 2 + 10, padding * 3 + 10)
+    pygame.draw.rect(screen, selected_color, rect)
+
     # Pintem punts al la pantalla
     draw_points(points, screen)
 
@@ -131,11 +137,9 @@ def draw_points(points, surface):
         pygame.draw.lines(surface, selected_color, False, points, line_width)
 
 def draw_button_width(button):
-    global screen
+    global screen, padding
 
     color = YELLOW if line_width == button["width"] else GRAY
-
-    padding = 23
 
     rect = (button["x"], button["y"], padding, padding)
 
@@ -146,11 +150,9 @@ def draw_button_width(button):
     pygame.draw.line(screen, BLACK, start_pos, end_pos, button["width"])
 
 def draw_button_color(button):
-    global screen, selected_color
+    global screen, selected_color, padding
 
     color = button["color"]
-
-    padding = 23
 
     rect = (button["x"], button["y"], padding, padding)
 
@@ -162,9 +164,8 @@ def draw_button_color(button):
         pygame.draw.rect(screen, WHITE, rect, 2)
 
 def check_buttons_width_clicked():
-    global mouse, buttons_width, line_width
+    global mouse, buttons_width, line_width, padding
 
-    padding = 23
     for button_width in buttons_width:
         rect = {"x": button_width["x"], "y": button_width["y"], "width": padding, "height": padding}
         if utils.is_point_in_rect(mouse, rect):
@@ -172,9 +173,8 @@ def check_buttons_width_clicked():
             break
 
 def check_buttons_color_clicked():
-    global mouse, buttons_color, selected_color
+    global mouse, buttons_color, selected_color, padding
 
-    padding = 23
     for button_color in buttons_color:
         rect = {"x": button_color["x"], "y": button_color["y"], "width": padding, "height": padding}
         if utils.is_point_in_rect(mouse, rect):
@@ -184,19 +184,23 @@ def check_buttons_color_clicked():
 def init_color_buttons():
     global buttons_color
 
-    init_pos_x = 80
+    rows = 3
+    columns = 10
+
+    init_pos_x = 75
     init_pos_y = 390
     increment = 25
 
     pos_x = init_pos_x
     pos_y = init_pos_y
     
-    lightness = 0.25
+    lightness = [0.25, 0.5, 0.85]
 
-    for _ in range(3):
-        for hue in range(0, 360, int(360 / 10)):
+    for index in range(rows):
+        light = lightness[index]
+        for hue in range(0, 360, int(360 / columns)):
             buttons_color.append({
-                "color": utils.hsl_to_rgb(hue, 1.0, lightness),
+                "color": utils.hsl_to_rgb(hue, 1.0, light),
                 "x": pos_x,
                 "y": pos_y
             })
@@ -204,11 +208,10 @@ def init_color_buttons():
         
         pos_x = init_pos_x
         pos_y += increment
-        lightness += increment / 100
     
-    buttons_color.append({ "color": BLACK, "x": 330, "y": 390 })
-    buttons_color.append({ "color": (128, 128, 128), "x": 330, "y": 415 })
-    buttons_color.append({ "color": WHITE, "x": 330, "y": 440 })
+    buttons_color.append({ "color": BLACK, "x": 325, "y": 390 })
+    buttons_color.append({ "color": (128, 128, 128), "x": 325, "y": 415 })
+    buttons_color.append({ "color": WHITE, "x": 325, "y": 440 })
 
 
 if __name__ == "__main__":
